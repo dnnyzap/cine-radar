@@ -1,0 +1,45 @@
+name: Cine Radar
+
+on:
+  schedule:
+    # A cada 4 horas (horário UTC; minuto 17 para fugir da fila da hora cheia)
+    - cron: "17 */4 * * *"
+  workflow_dispatch: {}   # botão "Run workflow" para rodar na mão
+
+permissions:
+  contents: write         # para commitar data/estado.json
+
+concurrency:
+  group: cine-radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build
+        run: mvn -B -q package
+
+      - name: Rodar
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          LETTERBOXD_USUARIO: ${{ vars.LETTERBOXD_USUARIO }}
+        run: java -Dstdout.encoding=UTF-8 -jar target/cine-radar.jar
+
+      - name: Salvar estado
+        run: |
+          git config user.name "cine-radar[bot]"
+          git config user.email "cine-radar@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet || (git commit -m "chore: atualiza estado do radar" && git push)

@@ -1,0 +1,17 @@
+{
+  "letterboxdUsuario": "",
+  "diasAFrente": 7,
+  "versoes": ["LEGENDADO"],
+  "formatos": [],
+  "horarioMinimo": null,
+  "cinemas": [
+    { "id": "F0281", "nome": "Kinoplex Amazonas" },
+    { "id": "F0593", "nome": "Cinépolis Ponta Negra" },
+    { "id": "F0793", "nome": "Cinépolis Millennium" },
+    { "id": "F0792", "nome": "Cinépolis Manaus Plaza" },
+    { "id": "G05J4", "nome": "UCI Manauara Shopping" },
+    { "id": "F0614", "nome": "Multiplex Via Norte" },
+    { "id": "F0747", "nome": "Centerplex Grande Circular" },
+    { "id": "G05IP", "nome": "Cine Casarão" }
+  ]
+}
