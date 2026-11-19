@@ -1,17 +1,19 @@
 {
   "letterboxdUsuario": "",
-  "diasAFrente": 7,
+  "diasAFrente": 14,
   "versoes": ["LEGENDADO"],
   "formatos": [],
   "horarioMinimo": null,
+  "ingressoCidade": "35",
   "cinemas": [
-    { "id": "F0281", "nome": "Kinoplex Amazonas" },
-    { "id": "F0593", "nome": "Cinépolis Ponta Negra" },
-    { "id": "F0793", "nome": "Cinépolis Millennium" },
-    { "id": "F0792", "nome": "Cinépolis Manaus Plaza" },
-    { "id": "G05J4", "nome": "UCI Manauara Shopping" },
-    { "id": "F0614", "nome": "Multiplex Via Norte" },
-    { "id": "F0747", "nome": "Centerplex Grande Circular" },
-    { "id": "G05IP", "nome": "Cine Casarão" }
+    { "id": "F0281", "ingresso": "1178", "nome": "Kinoplex Amazonas" },
+    { "id": "F0593", "ingresso": "1112", "nome": "Cinépolis Ponta Negra" },
+    { "id": "F0793", "ingresso": "1198", "nome": "Cinépolis Millennium" },
+    { "id": "F0792", "ingresso": "1199", "nome": "Cinépolis Manaus Plaza" },
+    { "id": "G05J4", "ingresso": "1580", "nome": "UCI Manauara Shopping" },
+    { "id": "F0614", "ingresso": "1263", "nome": "Multiplex Via Norte" },
+    { "id": "F0747", "ingresso": "1482", "nome": "Centerplex Grande Circular" },
+    { "id": "G05IP", "ingresso": "1609", "nome": "Cine Casarão" },
+    { "id": null,    "ingresso": "1303", "nome": "UCI Sumaúma" }
   ]
 }

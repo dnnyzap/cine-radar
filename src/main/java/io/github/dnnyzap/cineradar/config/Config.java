@@ -20,16 +20,39 @@ public record Config(
         Set<Versao> versoes,
         Set<String> formatos,
         String horarioMinimo,
-        List<Cinema> cinemas) {
+        List<Cinema> cinemas,
+        String ingressoCidade) {
 
+    /**
+     * Um cinema. Pode estar em uma ou nas duas fontes.
+     *
+     * @param id       id no AdoroCinema (ex.: "F0281"), ou null se o cinema não estiver lá
+     * @param nome     nome exibido no aviso
+     * @param ingresso id no Ingresso.com (ex.: "1178"), ou null para não consultar o Ingresso.com
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Cinema(String id, String nome) {}
+    public record Cinema(String id, String nome, String ingresso) {
+
+        public Cinema(String id, String nome) {
+            this(id, nome, null);
+        }
+
+        /** Identifica o cinema no estado e une as sessões das duas fontes. */
+        public String chave() {
+            return id != null && !id.isBlank() ? id : "ingresso-" + ingresso;
+        }
+    }
 
     public Config {
         diasAFrente = diasAFrente == null ? 7 : diasAFrente;
         versoes = versoes == null || versoes.isEmpty() ? Set.of(Versao.values()) : Set.copyOf(versoes);
         formatos = formatos == null ? Set.of() : Set.copyOf(formatos);
         cinemas = cinemas == null ? List.of() : List.copyOf(cinemas);
+    }
+
+    public Config(String letterboxdUsuario, Integer diasAFrente, Set<Versao> versoes, Set<String> formatos,
+                  String horarioMinimo, List<Cinema> cinemas) {
+        this(letterboxdUsuario, diasAFrente, versoes, formatos, horarioMinimo, cinemas, null);
     }
 
     public LocalTime horarioMinimoOuNull() {

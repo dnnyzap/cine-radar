@@ -66,20 +66,44 @@ public final class Matcher {
         return true;
     }
 
-    /** Resultado: para cada filme da watchlist que tem sessões, as sessões que atendem às preferências. */
+    /**
+     * Resultado: para cada filme da watchlist que tem sessões, as sessões que atendem às preferências.
+     *
+     * Quando AdoroCinema e Ingresso.com trazem o mesmo filme no mesmo cinema e horário, vale a do
+     * Ingresso.com (é quem vende o ingresso, e a versão costuma estar mais correta). A união é feita
+     * antes dos filtros, para uma versão errada do AdoroCinema não passar no lugar da certa.
+     */
     public static Map<Filme, List<Sessao>> cruzar(List<Filme> watchlist, List<Sessao> sessoes,
                                                    Config cfg, LocalDateTime agora) {
-        Map<Filme, List<Sessao>> resultado = new LinkedHashMap<>();
+        Map<Filme, List<Sessao>> porFilme = new LinkedHashMap<>();
         for (Sessao s : sessoes) {
-            if (!atendePreferencias(s, cfg, agora)) continue;
             for (Filme f : watchlist) {
                 if (mesmoFilme(f, s)) {
-                    resultado.computeIfAbsent(f, k -> new ArrayList<>()).add(s);
+                    porFilme.computeIfAbsent(f, k -> new ArrayList<>()).add(s);
                     break;
                 }
             }
         }
-        resultado.values().forEach(l -> l.sort((a, b) -> a.inicio().compareTo(b.inicio())));
+
+        Map<Filme, List<Sessao>> resultado = new LinkedHashMap<>();
+        for (var e : porFilme.entrySet()) {
+            List<Sessao> lista = semDuplicadas(e.getValue()).stream()
+                    .filter(s -> atendePreferencias(s, cfg, agora))
+                    .sorted((a, b) -> a.inicio().compareTo(b.inicio()))
+                    .toList();
+            if (!lista.isEmpty()) resultado.put(e.getKey(), new ArrayList<>(lista));
+        }
         return resultado;
+    }
+
+    /** Remove as sessões do AdoroCinema que o Ingresso.com também trouxe (mesmo cinema e horário). */
+    static List<Sessao> semDuplicadas(List<Sessao> doFilme) {
+        Set<String> noIngresso = doFilme.stream()
+                .filter(s -> s.fonte() == Sessao.Fonte.INGRESSO)
+                .map(s -> s.cinemaId() + "|" + s.inicio())
+                .collect(Collectors.toSet());
+        return doFilme.stream()
+                .filter(s -> s.fonte() == Sessao.Fonte.INGRESSO || !noIngresso.contains(s.cinemaId() + "|" + s.inicio()))
+                .toList();
     }
 }

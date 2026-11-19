@@ -92,4 +92,41 @@ class MatcherTest {
         assertEquals(Set.of(rocky), r.keySet());
         assertEquals(List.of(15, 21), r.get(rocky).stream().map(s -> s.inicio().getHour()).toList());
     }
+
+    private static Sessao doIngresso(String cinemaId, Versao v, int hora) {
+        return new Sessao(1000 + hora, cinemaId, "Cinema", "Tudo Pode Ser Visto", "You Can See Everything", 2026,
+                LocalDateTime.of(2026, 11, 26, hora, 0), v, Set.of(), "https://checkout.ingresso.com/x", Sessao.Fonte.INGRESSO);
+    }
+
+    private static Sessao doAdoro(String cinemaId, Versao v, int hora) {
+        return new Sessao(hora, cinemaId, "Cinema", "Tudo Pode Ser Visto", "You Can See Everything", 2026,
+                LocalDateTime.of(2026, 11, 26, hora, 0), v, Set.of(), null);
+    }
+
+    @Test
+    void ingressoTemPrioridadeSobreAdoroCinemaNaMesmaSessao() {
+        Filme f = new Filme("you-can-see-everything", "You Can See Everything", 2026);
+        // AdoroCinema diz dublado; Ingresso.com diz legendado para o mesmo cinema e horário.
+        List<Sessao> sessoes = List.of(doAdoro("F0793", Versao.DUBLADO, 20), doIngresso("F0793", Versao.LEGENDADO, 20));
+
+        Map<Filme, List<Sessao>> r = Matcher.cruzar(List.of(f), sessoes, cfg(Set.of(Versao.LEGENDADO), null, null), AGORA);
+        assertEquals(1, r.get(f).size());
+        assertEquals(Sessao.Fonte.INGRESSO, r.get(f).get(0).fonte());
+
+        // E o contrário: AdoroCinema diz legendado, Ingresso.com diz dublado -> não avisa.
+        List<Sessao> invertido = List.of(doAdoro("F0793", Versao.LEGENDADO, 20), doIngresso("F0793", Versao.DUBLADO, 20));
+        assertTrue(Matcher.cruzar(List.of(f), invertido, cfg(Set.of(Versao.LEGENDADO), null, null), AGORA).isEmpty());
+    }
+
+    @Test
+    void sessoesQueSoUmaFonteTemSaoMantidas() {
+        Filme f = new Filme("you-can-see-everything", "You Can See Everything", 2026);
+        List<Sessao> sessoes = List.of(
+                doAdoro("F0793", Versao.LEGENDADO, 18),      // só no AdoroCinema
+                doIngresso("F0793", Versao.LEGENDADO, 20),   // só no Ingresso.com
+                doIngresso("ingresso-1303", Versao.LEGENDADO, 21)); // cinema que só existe no Ingresso.com
+
+        Map<Filme, List<Sessao>> r = Matcher.cruzar(List.of(f), sessoes, cfg(Set.of(Versao.LEGENDADO), null, null), AGORA);
+        assertEquals(List.of(18, 20, 21), r.get(f).stream().map(s -> s.inicio().getHour()).toList());
+    }
 }

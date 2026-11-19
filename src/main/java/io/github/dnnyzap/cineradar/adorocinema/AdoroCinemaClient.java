@@ -23,6 +23,7 @@ public class AdoroCinemaClient {
     public List<Sessao> buscar(List<Cinema> cinemas, LocalDate inicio, int dias) {
         List<Sessao> todas = new ArrayList<>();
         for (Cinema cinema : cinemas) {
+            if (cinema.id() == null || cinema.id().isBlank()) continue;
             int antes = todas.size();
             for (int d = 0; d < dias; d++) {
                 LocalDate data = inicio.plusDays(d);
@@ -32,7 +33,7 @@ public class AdoroCinemaClient {
                     System.out.printf("  ! %s em %s: %s%n", cinema.nome(), data, e.getMessage());
                 }
             }
-            System.out.printf("%s: %d sessões%n", cinema.nome(), todas.size() - antes);
+            System.out.printf("AdoroCinema · %s: %d sessões%n", cinema.nome(), todas.size() - antes);
         }
         return todas;
     }
@@ -42,7 +43,7 @@ public class AdoroCinemaClient {
         for (int p = 1; p <= MAX_PAGINAS; p++) {
             Http.Resposta r = http.get(BASE.formatted(cinema.id(), data, p));
             if (!r.ok()) throw new IllegalStateException("HTTP " + r.status());
-            AdoroCinemaParser.Pagina pagina = AdoroCinemaParser.parse(r.corpo(), cinema.id(), cinema.nome());
+            AdoroCinemaParser.Pagina pagina = AdoroCinemaParser.parse(r.corpo(), cinema.chave(), cinema.nome());
             sessoes.addAll(pagina.sessoes());
             if (pagina.pagina() >= pagina.totalPaginas()) break;
         }

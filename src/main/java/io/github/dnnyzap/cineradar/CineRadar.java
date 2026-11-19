@@ -2,6 +2,7 @@ package io.github.dnnyzap.cineradar;
 
 import io.github.dnnyzap.cineradar.adorocinema.AdoroCinemaClient;
 import io.github.dnnyzap.cineradar.config.Config;
+import io.github.dnnyzap.cineradar.ingresso.IngressoClient;
 import io.github.dnnyzap.cineradar.letterboxd.WatchlistService;
 import io.github.dnnyzap.cineradar.matching.Matcher;
 import io.github.dnnyzap.cineradar.model.Filme;
@@ -60,7 +61,10 @@ public class CineRadar {
         List<Filme> watchlist = watchlistService.buscar(cfg.usuarioLetterboxd());
         watchlist = watchlistService.enriquecer(watchlist, estado.titulosAlternativos);
 
-        List<Sessao> sessoes = new AdoroCinemaClient(http).buscar(cfg.cinemas(), hoje, cfg.diasAFrente());
+        List<Sessao> sessoes = new ArrayList<>(new AdoroCinemaClient(http).buscar(cfg.cinemas(), hoje, cfg.diasAFrente()));
+        if (!vazio(cfg.ingressoCidade())) {
+            sessoes.addAll(new IngressoClient(http).buscar(cfg.ingressoCidade(), cfg.cinemas(), hoje, cfg.diasAFrente()));
+        }
         Map<Filme, List<Sessao>> encontrados = Matcher.cruzar(watchlist, sessoes, cfg, agora);
         System.out.printf("%d filmes da watchlist com sessões nas suas preferências%n", encontrados.size());
 

@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
- * Uma sessão de cinema vinda do AdoroCinema.
+ * Uma sessão de cinema, vinda do AdoroCinema ou do Ingresso.com.
  *
- * @param id             id da sessão no AdoroCinema (usado para não notificar duas vezes)
- * @param cinemaId       ex.: "F0281"
+ * @param id             id da sessão na fonte de origem
+ * @param cinemaId       chave do cinema no config (id do AdoroCinema, ex.: "F0281", ou "ingresso-1303")
  * @param cinemaNome     ex.: "Kinoplex Amazonas"
  * @param tituloPtBr     título em português
  * @param tituloOriginal título original
@@ -16,6 +16,7 @@ import java.util.Set;
  * @param versao         legendado, dublado ou nacional
  * @param formatos       3D, IMAX, VIP etc. (vazio = sala comum 2D)
  * @param linkIngresso   link de compra, ou null
+ * @param fonte          de onde a sessão veio
  */
 public record Sessao(
         long id,
@@ -27,7 +28,16 @@ public record Sessao(
         LocalDateTime inicio,
         Versao versao,
         Set<String> formatos,
-        String linkIngresso) {
+        String linkIngresso,
+        Fonte fonte) {
+
+    public Sessao(long id, String cinemaId, String cinemaNome, String tituloPtBr, String tituloOriginal,
+                  Integer ano, LocalDateTime inicio, Versao versao, Set<String> formatos, String linkIngresso) {
+        this(id, cinemaId, cinemaNome, tituloPtBr, tituloOriginal, ano, inicio, versao, formatos, linkIngresso,
+                Fonte.ADOROCINEMA);
+    }
+
+    public enum Fonte { ADOROCINEMA, INGRESSO }
 
     public enum Versao {
         LEGENDADO, DUBLADO, NACIONAL, DESCONHECIDA;

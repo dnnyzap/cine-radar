@@ -1,0 +1,214 @@
+[
+  {
+    "date": "2026-11-20",
+    "dateFormatted": "20/11",
+    "dayOfWeek": "sexta-feira",
+    "isToday": false,
+    "movies": [
+      {
+        "id": "29919",
+        "type": "Filme",
+        "title": "Jogos Vorazes: Amanhecer Na Colheita",
+        "originalTitle": "The Hunger Games - Sunrise On The Reaping",
+        "inPreSale": false,
+        "releaseYear": 2026,
+        "urlKey": "jogos-vorazes-amanhecer-na-colheita",
+        "siteURL": "https://www.ingresso.com/filme/jogos-vorazes-amanhecer-na-colheita?city=manaus&partnership=home",
+        "rooms": [
+          {
+            "name": "Sala 1",
+            "type": null,
+            "sessions": [
+              {
+                "id": "87408113",
+                "price": 51.3,
+                "room": "Sala 1",
+                "type": [
+                  "XPLUS",
+                  "Dublado"
+                ],
+                "types": [
+                  {
+                    "id": 128,
+                    "name": "XPLUS",
+                    "alias": "XPLUS",
+                    "display": true,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/sessiontype/"
+                    }
+                  },
+                  {
+                    "id": 0,
+                    "name": "Dublado",
+                    "alias": "DUB",
+                    "display": true,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/copytype/"
+                    }
+                  }
+                ],
+                "date": {
+                  "localDate": "2026-11-20T14:30:00-04:00",
+                  "isToday": false,
+                  "dayOfWeek": "sexta-feira",
+                  "dayAndMonth": "20/11",
+                  "hour": "14:30",
+                  "year": "2026"
+                },
+                "time": "14:30",
+                "siteURL": "https://checkout.ingresso.com/?sessionId=87408113&partnership=home",
+                "enabled": true
+              },
+              {
+                "id": "88408112",
+                "price": 51.3,
+                "room": "Sala 1",
+                "type": [
+                  "XPLUS",
+                  "Dublado"
+                ],
+                "types": [
+                  {
+                    "id": 128,
+                    "name": "XPLUS",
+                    "alias": "XPLUS",
+                    "display": true,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/sessiontype/"
+                    }
+                  },
+                  {
+                    "id": 0,
+                    "name": "Dublado",
+                    "alias": "DUB",
+                    "display": true,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/copytype/"
+                    }
+                  }
+                ],
+                "date": {
+                  "localDate": "2026-11-20T14:30:00-04:00",
+                  "isToday": false,
+                  "dayOfWeek": "sexta-feira",
+                  "dayAndMonth": "20/11",
+                  "hour": "14:30",
+                  "year": "2026"
+                },
+                "time": "14:30",
+                "siteURL": "https://checkout.ingresso.com/?sessionId=87408113&partnership=home",
+                "enabled": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-26",
+    "dateFormatted": "26/11",
+    "dayOfWeek": "quinta-feira",
+    "isToday": false,
+    "movies": [
+      {
+        "id": "34336",
+        "type": "Filme",
+        "title": "Tudo Pode Ser Visto",
+        "originalTitle": "You Can See Everything",
+        "inPreSale": true,
+        "releaseYear": 2026,
+        "urlKey": "tudo-pode-ser-visto",
+        "siteURL": "https://www.ingresso.com/filme/tudo-pode-ser-visto?city=manaus&partnership=home",
+        "rooms": [
+          {
+            "name": "Sala 2",
+            "type": null,
+            "sessions": [
+              {
+                "id": "87690427",
+                "price": 47.88,
+                "room": "Sala 2",
+                "type": [
+                  "Normal",
+                  "Legendado"
+                ],
+                "types": [
+                  {
+                    "id": 1,
+                    "name": "Normal",
+                    "alias": "2D",
+                    "display": false,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/sessiontype/"
+                    }
+                  },
+                  {
+                    "id": 0,
+                    "name": "Legendado",
+                    "alias": "LEG",
+                    "display": true,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/copytype/"
+                    }
+                  }
+                ],
+                "date": {
+                  "localDate": "2026-11-26T14:40:00-04:00",
+                  "isToday": false,
+                  "dayOfWeek": "quinta-feira",
+                  "dayAndMonth": "26/11",
+                  "hour": "14:40",
+                  "year": "2026"
+                },
+                "time": "14:40",
+                "siteURL": "https://checkout.ingresso.com/?sessionId=87690427&partnership=home",
+                "enabled": true
+              },
+              {
+                "id": "87690417",
+                "price": 47.88,
+                "room": "Sala 2",
+                "type": [
+                  "Normal",
+                  "Legendado"
+                ],
+                "types": [
+                  {
+                    "id": 1,
+                    "name": "Normal",
+                    "alias": "2D",
+                    "display": false,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/sessiontype/"
+                    }
+                  },
+                  {
+                    "id": 0,
+                    "name": "Legendado",
+                    "alias": "LEG",
+                    "display": true,
+                    "typeDescriptions": {
+                      "detailedImage": "https://ingresso-a.akamaihd.net/prd/img/copytype/"
+                    }
+                  }
+                ],
+                "date": {
+                  "localDate": "2026-11-26T18:05:00-04:00",
+                  "isToday": false,
+                  "dayOfWeek": "quinta-feira",
+                  "dayAndMonth": "26/11",
+                  "hour": "18:05",
+                  "year": "2026"
+                },
+                "time": "18:05",
+                "siteURL": "https://checkout.ingresso.com/?sessionId=87690417&partnership=home",
+                "enabled": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

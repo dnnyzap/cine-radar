@@ -5,16 +5,16 @@ Avisa no **Telegram** quando um filme da sua **watchlist do Letterboxd** ganha s
 Roda de graça no **GitHub Actions** a cada 4 horas. Não precisa de servidor nem VPS.
 
 ```
-Letterboxd (watchlist) ─┐
-                        ├─> cruza títulos + ano ─> filtra preferências ─> Telegram
-AdoroCinema (sessões) ──┘                                   │
+Letterboxd (watchlist) ──┐
+AdoroCinema (sessões) ───┼─> cruza títulos + ano ─> filtra preferências ─> Telegram
+Ingresso.com (sessões) ──┘                                   │
                                                 data/estado.json (não repete aviso)
 ```
 
 ## Como funciona
 
 1. **Watchlist**: lê a página pública `letterboxd.com/<usuario>/watchlist/` (Jsoup). Se não conseguir, usa o `data/watchlist.csv` do export do Letterboxd.
-2. **Sessões**: consulta a programação de cada cinema no AdoroCinema (endpoint JSON usado pelo próprio site), para os próximos `diasAFrente` dias.
+2. **Sessões**: consulta a programação de cada cinema no AdoroCinema e no Ingresso.com (os endpoints JSON usados pelos próprios sites), para os próximos `diasAFrente` dias, incluindo pré-venda. Quando as duas fontes trazem a mesma sessão (mesmo filme, cinema e horário), vale a do Ingresso.com, que é quem vende o ingresso e costuma ter a versão (legendado/dublado) mais correta.
 3. **Cruzamento**: o Letterboxd usa o título em inglês e o cinema usa o título em português. O radar compara o título do Letterboxd e o título original (da página do filme) com o título original e o pt-BR da sessão, sem acentos nem pontuação, e confere o ano (±1). Com `TMDB_API_KEY`, também usa o título em pt-BR do TMDB.
 4. **Aviso**: uma mensagem por filme, com os horários agrupados por cinema e tipo e o link de compra.
 5. **Sem spam**: cada combinação filme + cinema + versão + formato só gera aviso na primeira vez, ou se sumir da programação por mais de 7 dias e voltar.
@@ -45,18 +45,23 @@ A watchlist precisa estar **pública** no Letterboxd.
 
 ```json
 {
-  "diasAFrente": 7,
+  "diasAFrente": 14,
   "versoes": ["LEGENDADO"],
   "formatos": [],
   "horarioMinimo": "18:00",
-  "cinemas": [ { "id": "F0281", "nome": "Kinoplex Amazonas" } ]
+  "ingressoCidade": "35",
+  "cinemas": [ { "id": "F0281", "ingresso": "1178", "nome": "Kinoplex Amazonas" } ]
 }
 ```
 
 - `versoes`: `LEGENDADO`, `DUBLADO`, `NACIONAL`. Vazio = todas.
 - `formatos`: vazio = qualquer sala. Exemplos: `["IMAX"]`, `["VIP"]`, `["3D"]`, `["Macro XE"]`, ou `["2D"]` para sala comum (sem 3D/IMAX/Macro XE).
 - `horarioMinimo`: ignora sessões antes desse horário. `null` = qualquer horário.
-- `cinemas`: ids do AdoroCinema. O arquivo já vem com todos os cinemas de Manaus. O id fica na URL da programação: `adorocinema.com/programacao/cinema-F0281/`. Para outra cidade, veja a lista em `adorocinema.com/programacao/cinema/cidade-.../`.
+- `diasAFrente`: quantos dias à frente olhar. Com 14, você fica sabendo da pré-venda de estreias com até duas semanas de antecedência.
+- `ingressoCidade`: id da cidade no Ingresso.com (Manaus = `35`). `null` desliga o Ingresso.com. Para outra cidade, procure o id em `api-content.ingresso.com/v0/states/<UF>`.
+- `cinemas`: o arquivo já vem com todos os cinemas de Manaus. Cada cinema pode ter:
+  - `id`: id do AdoroCinema, que aparece na URL da programação (`adorocinema.com/programacao/cinema-F0281/`). Use `null` se o cinema não estiver lá, como o UCI Sumaúma.
+  - `ingresso`: id do Ingresso.com. A lista da cidade está em `api-content.ingresso.com/v0/theaters/city/35?partnership=home`. Sem esse campo, o cinema só é consultado no AdoroCinema.
 
 ### 5. Teste
 Em **Actions → Cine Radar → Run workflow**. O log mostra quantas sessões encontrou em cada cinema e quantos avisos enviou.
@@ -87,7 +92,8 @@ src/main/java/io/github/dnnyzap/cineradar/
 ├── Http.java                 # HttpClient com User-Agent, pausa entre requisições e retry
 ├── config/Config.java        # config.json + variáveis de ambiente
 ├── letterboxd/               # watchlist (HTML e CSV) + títulos alternativos
-├── adorocinema/              # programação dos cinemas (JSON)
+├── adorocinema/              # programação dos cinemas no AdoroCinema (JSON)
+├── ingresso/                 # programação dos cinemas no Ingresso.com (JSON)
 ├── matching/Matcher.java     # cruza títulos/ano e aplica preferências
 ├── notify/                   # texto da mensagem + envio pelo Telegram
 └── state/Estado.java         # o que já foi avisado (data/estado.json)
@@ -95,7 +101,7 @@ src/main/java/io/github/dnnyzap/cineradar/
 
 ## Limitações conhecidas
 
-- AdoroCinema e Letterboxd não têm API pública para isso: se o site mudar, o parser precisa de ajuste. Os testes usam respostas reais salvas em `src/test/resources`, então fica fácil ver o que quebrou.
+- AdoroCinema, Ingresso.com e Letterboxd não têm API pública documentada para isso: se o site mudar, o parser precisa de ajuste. Os testes usam respostas reais salvas em `src/test/resources`, então fica fácil ver o que quebrou.
 - Filmes estrangeiros com título muito diferente podem não casar sem a `TMDB_API_KEY`.
 - O GitHub desativa workflows agendados de repositórios públicos sem atividade por 60 dias. Se isso acontecer, é só reativar na aba Actions.
 
